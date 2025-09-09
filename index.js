@@ -1,8 +1,6 @@
-// Check for saved theme preference or use prefers-color-scheme
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 const currentTheme = localStorage.getItem("theme");
 
-// Function to set theme
 function setTheme(theme) {
     const themeColorMeta = document.querySelector('meta[name="theme-color"]');
     const themeSelect = document.getElementById("theme-select");
@@ -21,18 +19,15 @@ function setTheme(theme) {
         }
         if (themeSelect) themeSelect.value = "system";
     } else {
-        // Default to dark theme
         document.documentElement.removeAttribute("data-theme");
         themeColorMeta.content = "#1a1a1a"; // Dark theme content bg color
         if (themeSelect) themeSelect.value = "dark";
     }
 }
 
-// Set initial theme based on saved preference or default to dark
 if (currentTheme) {
     setTheme(currentTheme);
 } else {
-    // Default to dark mode if no saved preference
     setTheme("dark");
 }
 
@@ -51,6 +46,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+// Function to update theme toggle label
+function updateThemeToggleLabel() {
+    const label = document.querySelector('label[for="footer-checkbox"]');
+    if (label) {
+        const currentTheme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+        label.textContent = currentTheme === "dark" ? "DARK" : "LIGHT";
+    }
+}
+
 // Legacy support for existing checkbox if it exists
 if (document.getElementById("footer-checkbox")) {
     document.getElementById("footer-checkbox").addEventListener("change", function() {
@@ -58,8 +62,13 @@ if (document.getElementById("footer-checkbox")) {
         const newTheme = currentTheme === "dark" ? "light" : "dark";
         localStorage.setItem("theme", newTheme);
         setTheme(newTheme);
+        updateThemeToggleLabel();
     });
+    
+    // Initial label update
+    updateThemeToggleLabel();
 }
+
 
 // Listen for changes in system color scheme preference
 prefersDarkScheme.addEventListener("change", (e) => {
