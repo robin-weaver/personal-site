@@ -1,6 +1,12 @@
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 const currentTheme = localStorage.getItem("theme");
 
+function forceRepaint() {
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+}
+
 function setTheme(theme) {
     const themeColorMeta = document.querySelector('meta[name="theme-color"]');
     const themeSelect = document.getElementById("theme-select");
@@ -23,6 +29,8 @@ function setTheme(theme) {
         themeColorMeta.content = "#1a1a1a"; // Dark theme content bg color
         if (themeSelect) themeSelect.value = "dark";
     }
+    
+    forceRepaint();
 }
 
 if (currentTheme) {
